@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Kirti SIH Project</title>
+</head>
+
+<body>
+    <!-- <div id="preloader">
+        <img src="./assets/blink-eyes.gif" alt="Blinking Eyes" class="preloader-icon">
+        <p class="kirtiji">Loading....😊</p>
+    </div> -->
+
+
+
+    <nav class="navbar">
+        <div class="logo"><a href="./index.html"><img src="./assets/drishti-logo.png" alt="logo"></a></div>
+        <div class="menu" id="menu">
+            <a href="http://127.0.0.1:5501/index.html#howtouse">How To Use?</a>
+            <a href="http://127.0.0.1:5501/index.html#ImpactsBenefits">Impacts & Benefits</a>
+            <button class="predict-btn">Predict now</button>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+
+   
+<div class="predicthero">
+  
+
+    <div class="heroHeading">
+        <h2>Advanced Glaucoma Prediction App</h2>
+        <div class="headline">
+            <img src="./assets/kirti-line.png" alt="line">
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <img src="./assets/glacuoma-2.jpg" class="glc" alt="Glaucoma Image" style="width:100%; max-width: 700px; display: block; margin: 20px auto;">
+
+        <p>This app predicts your risk of glaucoma based on intraocular pressure (IOP) and other parameters like age, corneal thickness, family history, blood pressure, and lifestyle factors.</p>
+
+        <div class="columns">
+            <div class="column">
+                <label>Age (years):</label>
+                <input type="number" id="age" min="0" max="120">
+
+                <label>Corneal Thickness (microns):</label>
+                <input type="number" id="corneal-thickness" min="400" max="700" step="0.1">
+
+                <label>Blood Pressure (Systolic):</label>
+                <input type="number" id="bp-systolic" min="50" max="250">
+            </div>
+
+            <div class="column">
+                <label>Family History of Glaucoma:</label>
+                <select id="family-history">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+
+                <label>Blood Pressure (Diastolic):</label>
+                <input type="number" id="bp-diastolic" min="30" max="150">
+
+                <label>Diabetes:</label>
+                <select id="diabetes">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+
+            <div class="column">
+                <label>Smoking Habit:</label>
+                <select id="smoking">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+
+                <label>Physical Activity Level:</label>
+                <select id="physical-activity">
+                    <option value="Never">Never</option>
+                    <option value="Occasionally">Occasionally</option>
+                    <option value="Regularly">Regularly</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="predict-btn">Predict</button>
+        <div id="result"></div>
+    </div>
+</div>
+
+
+
+<div class="footer">
+    <div class="credit">❤️ Made By Team Drishti</div>
+</div>
+
+
+<script>
+    function getHardwareGeneratedIop(age, cornealThickness, familyHistory, bpSystolic, bpDiastolic, diabetes, smoking, physicalActivity) {
+        let iop = 15 + (age / 100) + (600 - cornealThickness) / 50 + (bpSystolic - 120) / 30 + (bpDiastolic - 80) / 20;
+
+        if (familyHistory === "Yes") iop += 3;
+        if (diabetes === "Yes") iop += 2;
+        if (smoking === "Yes") iop += 1;
+        if (physicalActivity === "Never") iop += 1;
+
+        return iop.toFixed(1);
+    }
+
+    function predictGlaucomaRisk(iop, age, cornealThickness, familyHistory, diabetes, smoking, physicalActivity) {
+        let riskScore = 0;
+
+        if (iop > 21) riskScore += 2;
+        if (age > 60) riskScore += 1;
+        if (cornealThickness < 510) riskScore += 1;
+        if (familyHistory === "Yes") riskScore += 1;
+        if (diabetes === "Yes") riskScore += 1;
+        if (smoking === "Yes") riskScore += 1;
+        if (physicalActivity === "Never") riskScore += 1;
+
+        if (riskScore >= 5) return "High Risk of Glaucoma";
+        if (riskScore >= 3) return "Moderate Risk of Glaucoma";
+        return "Low Risk of Glaucoma";
+    }
+
+    document.getElementById('predict-btn').addEventListener('click', function() {
+        const age = parseInt(document.getElementById('age').value);
+        const cornealThickness = parseFloat(document.getElementById('corneal-thickness').value);
+        const bpSystolic = parseInt(document.getElementById('bp-systolic').value);
+        const bpDiastolic = parseInt(document.getElementById('bp-diastolic').value);
+        const familyHistory = document.getElementById('family-history').value;
+        const diabetes = document.getElementById('diabetes').value;
+        const smoking = document.getElementById('smoking').value;
+        const physicalActivity = document.getElementById('physical-activity').value;
+
+
+        if (!age || !cornealThickness || !bpSystolic || !bpDiastolic) {
+            document.getElementById('result').innerHTML = "<p style='color:red;'>Please fill in all fields correctly.</p>";
+            return;
+        }
+
+        const iop = getHardwareGeneratedIop(age, cornealThickness, familyHistory, bpSystolic, bpDiastolic, diabetes, smoking, physicalActivity);
+        const risk = predictGlaucomaRisk(iop, age, cornealThickness, familyHistory, diabetes, smoking, physicalActivity);
+
+        let resultClass = "low-risk";
+        if (risk === "High Risk of Glaucoma") resultClass = "high-risk";
+        else if (risk === "Moderate Risk of Glaucoma") resultClass = "moderate-risk";
+
+        document.getElementById('result').innerHTML = `
+            <h3 class='${resultClass}'>Prediction: ${risk}</h3>
+            <p>Generated IOP: ${iop} mm Hg</p>
+        `;
+    });
+</script>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
